@@ -168,6 +168,19 @@
      <widget class="QWidget" name="callLordPage">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="MyButton" name="giveup">
          <property name="text">
           <string>PushButton</string>
@@ -184,8 +197,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>10</width>
-           <height>20</height>
+           <width>40</width>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -207,8 +220,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>10</width>
-           <height>20</height>
+           <width>40</width>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -230,8 +243,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>10</width>
-           <height>20</height>
+           <width>40</width>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -250,7 +263,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>0</width>
            <height>20</height>
           </size>
          </property>

@@ -36,7 +36,7 @@ void GameControl::playerInit()
 
     //left robot
     m_robotLeft->setPrevPlayer(m_robotRight);
-    m_robotLeft->setNextPlayer(m_robotRight);
+    m_robotLeft->setNextPlayer(m_user);
 
     //right robot
     m_robotRight->setPrevPlayer(m_user);
@@ -44,6 +44,11 @@ void GameControl::playerInit()
 
     //指定当前玩家
     m_currPlayer = m_user;
+
+    //处理玩家发射出的信号
+    connect(m_user, &UserPlayer::notifyGrabLordBet, this, &GameControl::onGrabBet);
+    connect(m_robotLeft, &UserPlayer::notifyGrabLordBet, this, &GameControl::onGrabBet);
+    connect(m_robotRight, &UserPlayer::notifyGrabLordBet, this, &GameControl::onGrabBet);
 
 }
 
@@ -126,6 +131,7 @@ void GameControl::resetCardData()
 void GameControl::startLordCard()
 {
     m_currPlayer->prepareCallLord();
+    emit playerStatusChanged(m_currPlayer, ThinkingForCallLord);
 }
 
 void GameControl::becomeLord(Player *player)
@@ -145,4 +151,45 @@ void GameControl::clearPlayerScore()
     m_robotLeft->setScore(0);
     m_robotRight->setScore(0);
     m_user->setScore(0);
+}
+
+void GameControl::onGrabBet(Player *player, int bet)
+{
+    // 1.通知主界面玩家叫地主了(更新信息提示)
+    emit notifyGrabLordBet(player, bet);
+    // 2.判断玩家下注是不是3分，如果是抢地主结束
+      if (bet == 3)
+      {
+          //玩家成为地主
+          becomeLord(player);
+          //清空数据
+          m_betRecord.reset();
+          return;
+      }
+    // 3.下注不够3分，对玩家的分数进行比较，分数高的是地主
+      if(m_betRecord.bet < bet)
+      {
+          m_betRecord.bet = bet;
+          m_betRecord.player = player;
+      }
+      m_betRecord.times ++;
+      //如果每个玩家都抢过一次地主，抢地主结束
+      if (m_betRecord.times == 3)
+      {
+          if(m_betRecord.bet == 0)
+          {
+              emit gameStatusChanged(DispatchCard);
+          }
+          else
+          {
+              becomeLord(m_betRecord.player);
+          }
+          m_betRecord.reset();
+          return;
+      }
+    // 4.切换玩家，通知下一个玩家继续抢地主
+    m_currPlayer = player->getNextPlayer();
+    //发送信号给主界面，告知当前状态为抢地主
+    playerStatusChanged(m_currPlayer, ThinkingForCallLord);
+    m_currPlayer->prepareCallLord();
 }

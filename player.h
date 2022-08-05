@@ -76,6 +76,9 @@ public:
 
 
 signals:
+    //通知已经叫地主下注
+    void notifyGrabLordBet(Player* player,int bet);
+
 
 protected://保证其能够在子类里被访问
     int m_score = 0;

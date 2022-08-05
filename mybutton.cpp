@@ -35,7 +35,7 @@ void MyButton::mouseReleaseEvent(QMouseEvent *ev)
         m_pixmap.load(m_normal);
         update();
     }
-    QPushButton::mousePressEvent(ev);
+    QPushButton::mouseReleaseEvent(ev);
 }
 
 void MyButton::enterEvent(QEvent *ev)

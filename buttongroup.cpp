@@ -6,6 +6,7 @@ ButtonGroup::ButtonGroup(QWidget *parent) :
     ui(new Ui::ButtonGroup)
 {
     ui->setupUi(this);
+    initButtons();
 }
 
 ButtonGroup::~ButtonGroup()

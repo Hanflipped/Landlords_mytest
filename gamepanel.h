@@ -32,7 +32,7 @@ public:
     //初始化玩家在窗口中的上下文环境
     void initPlayerContext();
     //初始化游戏场景
-    void initGamesScene();
+    void initGameScene();
     //处理游戏的状态
     void gameStatusPrecess(GameControl::GameStatus status);
     // 发牌
@@ -45,6 +45,8 @@ public:
     void updatePlayerCards(Player* player);
     //定时器的处理动作
     void onDispatchCard();
+    //处理玩家状态的变化
+    void onPlayerStatusChanged(Player *player, GameControl::PlayerStatus status);
 
 protected:
     void paintEvent(QPaintEvent* ev);

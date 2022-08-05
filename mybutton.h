@@ -1,7 +1,7 @@
 #ifndef MYBUTTON_H
 #define MYBUTTON_H
 
-#include <QPushButton>> //??这是什么类
+#include <QPushButton> //??这是什么类
 
 class MyButton : public QPushButton
 {

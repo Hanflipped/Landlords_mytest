@@ -24,7 +24,6 @@ GamePanel::GamePanel(QWidget *parent)
 
     //3.实例化游戏控制对象
     gameControlInit();
-
     //4.玩家得分(更新）
     updatePlayerScore();//注意函数的调用顺序
 
@@ -38,7 +37,7 @@ GamePanel::GamePanel(QWidget *parent)
     initPlayerContext();
 
     //8. 扑克牌场景初始化
-    initGamesScene();
+    initGameScene();
 
     //定时器实例化
     m_timer = new QTimer(this);
@@ -61,11 +60,13 @@ void GamePanel::gameControlInit()
     UserPlayer* user = m_gameCtl->getUserPlayer();
     //存储的顺序:左侧机器人，右侧机器人，当前玩家
     m_playerList << leftRobot << rightRobot << user; //<<被重载了，可以执行插入操作
+
+    connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
 }
 
 void GamePanel::updatePlayerScore()
 {
-    ui->ScorePanel->setScores(
+    ui->scorePanel->setScores(
                 m_playerList[0]->getScore(),
                 m_playerList[1]->getScore(),
             m_playerList[2]->getScore());
@@ -76,7 +77,7 @@ void GamePanel::initCardMap()
     //1.加载大图
     QPixmap pixmap(":/images/card.png"); //QPixmap的用法？？如何查看头文件的source源文件
     //2.计算每张图片大小
-    m_cardSize.setWidth(pixmap.width() / 3);
+    m_cardSize.setWidth(pixmap.width() / 13);
     m_cardSize.setHeight(pixmap.height() / 5);
 
     //3.设置背景图
@@ -129,7 +130,9 @@ void GamePanel::initButtonsGroup()
     });
     connect(ui->btnGroup, &ButtonGroup::playHand, this, [=](){});
     connect(ui->btnGroup, &ButtonGroup::pass, this, [=](){});
-    connect(ui->btnGroup, &ButtonGroup::betPoint, this, [=](){});
+    connect(ui->btnGroup, &ButtonGroup::betPoint, this, [=](int bet){
+        m_gameCtl->getCurrentPlayer()->grabLordBet(bet);
+    });
 }
 
 void GamePanel::initPlayerContext()
@@ -156,8 +159,8 @@ void GamePanel::initPlayerContext()
     QPoint roleImagPos[] =
     {
         QPoint(cardsRect[0].left()-80, cardsRect[0].height() / 2 + 20), //左侧机器人
-        QPoint(cardsRect[1].left()+10, cardsRect[1].height() / 2 + 20),  //右侧机器人
-        QPoint(cardsRect[2].left()-10, cardsRect[2].top() - 10)//当前玩家
+        QPoint(cardsRect[1].right()+10, cardsRect[1].height() / 2 + 20),  //右侧机器人
+        QPoint(cardsRect[2].right()-10, cardsRect[2].top() - 10)//当前玩家
     };
 
     //循环
@@ -187,7 +190,7 @@ void GamePanel::initPlayerContext()
 
 }
 
-void GamePanel::initGamesScene() //若需要在其它成员函数中使用，则将其指定为成员变量
+void GamePanel::initGameScene() //若需要在其它成员函数中使用，则将其指定为成员变量
 {
     // 1. 发牌区的扑克牌
         m_baseCard = new CardPanel(this);
@@ -227,7 +230,20 @@ void GamePanel::gameStatusPrecess(GameControl::GameStatus status)
             startDispatchCard();
             break;
         case GameControl::CallingLord:
+    {
+            //取出底牌数据
+            CardList last3Card = m_gameCtl->getSurplusCards().toCardList();
+            //给底牌窗口设置图片
+            for (int i = 0; i < last3Card.size(); ++i)
+            {
+                QPixmap front = m_cardMap[last3Card.at(i)]->getImage();
+                m_last3Card[i]->setImage(front, m_cardBackImg);
+                m_last3Card[i]->hide();
+            }
+            //开始叫地主
+            m_gameCtl->startLordCard();
             break;
+    }
         case GameControl::PlayingHand:
             break;
         default:
@@ -375,10 +391,31 @@ void GamePanel::onDispatchCard()
             m_timer->stop();
             //  切换游戏状态
             gameStatusPrecess(GameControl::CallingLord);
+            return;
         }
     }
     // 移动扑克牌
+    cardMoveStep(curPlayer, curMovePos);
     curMovePos += 15;
+}
+
+void GamePanel::onPlayerStatusChanged(Player *player, GameControl::PlayerStatus status)
+{
+    switch (status)
+    {
+    case GameControl::ThinkingForCallLord:
+        if(player == m_gameCtl->getUserPlayer())
+        {
+            ui->btnGroup->selectPanel(ButtonGroup::CallLord);
+        }
+        break;
+    case GameControl::ThinkingForPlayHand:
+        break;
+    case GameControl::Winning:
+        break;
+    default:
+        break;
+    }
 }
 
 void GamePanel::paintEvent(QPaintEvent *ev) //窗口初始化后会自动执行(因为它是回调函数)
@@ -387,4 +424,3 @@ void GamePanel::paintEvent(QPaintEvent *ev) //窗口初始化后会自动执行(
     QPainter p(this); //自动添加头文件alt+enter
     p.drawPixmap(rect(),m_bkImage);
 }
-

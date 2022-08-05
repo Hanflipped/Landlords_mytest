@@ -32,7 +32,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="ScorePanel" name="ScorePanel" native="true"/>
+        <widget class="ScorePanel" name="scorePanel" native="true"/>
        </item>
       </layout>
      </widget>
