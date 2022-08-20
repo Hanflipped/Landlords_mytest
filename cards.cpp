@@ -202,7 +202,7 @@ void Cards::printAllCardInfo()
         {
             msg = "Small Joker";
         }
-        msg += " ";//??这句命令有什么意义？
+        msg += "  ";//??这句命令有什么意义？
         text += msg;
     }
 

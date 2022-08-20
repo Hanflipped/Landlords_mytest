@@ -20,7 +20,7 @@ public:
     void initButtons();
 
     //处理page页的切换
-    void selectPanel(Panel type); //??type的意义是什么？(传递参数的名字)
+    void selectPanel(Panel type, int bet = 0); //??type的意义是什么？(传递参数的名字)
 
 signals: //在类外进行定义
     //开始游戏

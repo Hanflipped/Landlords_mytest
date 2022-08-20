@@ -13,5 +13,5 @@ void Robot::prepareCallLord()
 
 void Robot::preparePlayHand()
 {
-
+    
 }

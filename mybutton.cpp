@@ -39,19 +39,22 @@ void MyButton::mouseReleaseEvent(QMouseEvent *ev)
 }
 
 void MyButton::enterEvent(QEvent *ev)
-{
+{   
+    Q_UNUSED(ev)
     m_pixmap.load(m_hover); //先切换
     update();  //再绘制
 }
 
 void MyButton::leaveEvent(QEvent *ev)
 {
+    Q_UNUSED(ev)
     m_pixmap.load(m_normal);
     update();
 }
 
 void MyButton::paintEvent(QPaintEvent *ev) //？？重新绘制
 {
+    Q_UNUSED(ev)
     QPainter p(this);
     p.drawPixmap(rect(), m_pixmap);
 }

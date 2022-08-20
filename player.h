@@ -53,8 +53,8 @@ public:
     void grabLordBet(int point);
 
     //存储扑克牌（发牌的时候得到的）
-    void storeDispatchCard(Card& card);
-    void storeDispatchCard(Cards& cards);
+    void storeDispatchCard(const Card& card);
+    void storeDispatchCard(const Cards& cards);
 
     //得到所有的牌
     Cards getCards();

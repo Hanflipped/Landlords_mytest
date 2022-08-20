@@ -4,7 +4,7 @@
 #include <QPainter>
 
 CardPanel::CardPanel(QWidget *parent)
-    : QWidget{parent}
+    : QWidget(parent)
 {
 
 }

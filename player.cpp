@@ -1,13 +1,13 @@
 #include "player.h"
 
 Player::Player(QObject *parent)
-    : QObject{parent}
+    : QObject(parent)
 {
     m_score = 0;
     m_isWin = false;
 }
 
-Player::Player(QString name, QObject *parent):Player(parent) //？？初始化时调用了上面的构造函数(委托构造函数)
+Player::Player(QString name, QObject *parent) : Player(parent) //？？初始化时调用了上面的构造函数(委托构造函数)
 {
     m_name = name;
 }
@@ -107,12 +107,12 @@ void Player::grabLordBet(int point)
     emit notifyGrabLordBet(this, point);
 }
 
-void Player::storeDispatchCard(Card &card)
+void Player::storeDispatchCard(const Card &card)
 {
     m_cards.add(card);
 }
 
-void Player::storeDispatchCard(Cards &cards)
+void Player::storeDispatchCard(const Cards &cards)
 {
     m_cards.add(cards);
 }

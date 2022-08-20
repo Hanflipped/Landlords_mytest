@@ -53,7 +53,7 @@ public:
     //得到玩家的实例对象
     Robot* getLeftRobot();
     Robot* getRightRobot();
-    UserPlayer *getUserPlayer();
+    UserPlayer* getUserPlayer();
 
     void setCurrentPlayer(Player* player);
     Player* getCurrentPlayer();
@@ -75,10 +75,12 @@ public:
     //准备叫地主
     void startLordCard();
     //成为地主
-    void becomeLord(Player *player);
+    void becomeLord(Player *player, int bet);
 
     //清空所有玩家得分
     void clearPlayerScore();
+    //得到玩家下注的最高分数
+    int getPlayerMaxBet();
 
     //处理叫地主
     void onGrabBet(Player* player, int bet);
@@ -89,18 +91,19 @@ public:
 signals:
     void playerStatusChanged(Player* player, PlayerStatus status);
     //通知玩家抢地主了
-    void notifyGrabLordBet(Player* player, int bet);
+    void notifyGrabLordBet(Player* player, int bet, bool flag);
     //游戏状态变化
     void gameStatusChanged(GameStatus status);
 private:
-    Robot* m_robotLeft;
-    Robot* m_robotRight;
-    UserPlayer* m_user;
-    Player* m_currPlayer;
-    Player* m_pendPlayer;
+    Robot* m_robotLeft = nullptr;
+    Robot* m_robotRight = nullptr;
+    UserPlayer* m_user = nullptr;
+    Player* m_currPlayer = nullptr;
+    Player* m_pendPlayer = nullptr;
     Cards m_pendCards;
     Cards m_allCards;
     BetRecord m_betRecord;
+    int m_curBet = 0;
 
 };
 

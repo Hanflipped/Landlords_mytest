@@ -32,7 +32,7 @@ Card::CardSuit Card::suit() const
     return m_suit;
 }
 
-bool lessSort(const Card& c1, const Card &c2)
+bool lessSort(const Card & c1, const Card &c2)
 {
     if(c1.point() == c2.point())
     {
